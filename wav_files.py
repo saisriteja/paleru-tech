@@ -20,13 +20,17 @@ class audio:
     def plot_wav(self):
         plt.figure(figsize=(14, 5))
         librosa.display.waveplot(self.signalData, sr=self.samplingFrequency)
+    def plot_spectrogram(self):
+        X = librosa.stft(self.signalData)
+        Xdb = librosa.amplitude_to_db(abs(X))
+        plt.figure(figsize=(14, 5))
+        plt.title(self.name.split('.')[0])
+        librosa.display.specshow(Xdb, sr=self.samplingFrequency, x_axis='time', y_axis='hz')
+        plt.colorbar(format='%+2.0f dB')
 
 
-def converttowav(path,file):
-    print(os.path.join(path,file))
-    sound = AudioSegment.from_mp3(os.path.join(path,file))
-    name = file.split('.')[0]
-    sound.export(path+'/'+name+".wav", format="wav")
+
+
 
 def freq_plot(self):
     X = scipy.fft(self.signalData)
@@ -60,7 +64,6 @@ def plot_spectrogram_limit(self,limits = (0,10000),save=False):
     # Plot the signal read from wav file
     plt.title(self.name)
     t = np.linspace(0,self.duration,len(self.signalData))
-
     plt.specgram(self.signalData,Fs=self.samplingFrequency,cmap = 'inferno')
     plt.colorbar(format='%+2.0f hz')
     plt.xlabel('Time')
